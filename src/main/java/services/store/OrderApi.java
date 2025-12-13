@@ -5,12 +5,13 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
+
 import static io.restassured.RestAssured.given;
 
 public class OrderApi {
 
-    private static final String BASE_URL = "https://petstore.swagger.io/v2";
-    private static final String BASE_PATH = "/store/order/";
+    static final String BASE_URL = System.getProperty("base.url", "${base.url}");
+    static final String BASE_PATH = "/store/order/";
     private RequestSpecification spec;
 
     public OrderApi() {
@@ -21,7 +22,7 @@ public class OrderApi {
     }
 
     public ValidatableResponse createOrder(OrderDTO orderDTO) {
-       return  given(spec)
+        return given(spec)
                 .basePath(BASE_PATH)
                 .body(orderDTO)
                 .when()
@@ -41,5 +42,4 @@ public class OrderApi {
                 .log().all()
                 .extract().response();
     }
-
 }

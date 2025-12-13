@@ -31,7 +31,7 @@
 
 
         <base.url>
-            https://otus.ru
+            https://petstore.swagger.io/v2
         </base.url>
 
         <browser.name>chrome</browser.name>

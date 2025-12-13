@@ -3,6 +3,7 @@ package otus.api;
 import dto.OrderDTO;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import org.junit.jupiter.api.Test;
+import services.store.DeleteOrderApi;
 import services.store.OrderApi;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -16,8 +17,9 @@ public class GetOrderByIdTest {
     // 3) Проверяем:
     //    - что вернулся статус 200
     //    - что поля в response соответствуют тем, что мы отправили
+
     @Test
-    void getOrderStatusCodeTest() {
+    void getOrderTest() {
         OrderApi orderApi = new OrderApi();
 
         OrderDTO orderDto = OrderDTO.builder()
@@ -29,10 +31,8 @@ public class GetOrderByIdTest {
                 .complete(true)
                 .build();
 
-        // Создаем заказ
         orderApi.createOrder(orderDto);
 
-        // Получаем заказ и проверяем содержимое
         orderApi.getOrderById(30)
                 .then()
                 .statusCode(200) // Проверяем успешный GET
@@ -49,6 +49,7 @@ public class GetOrderByIdTest {
     // 2) Выполняем GET /store/order/{id}
     // 3) Проверяем, что структура JSON ответа строго соответствует схеме
     //    (наличие всех полей, корректные типы данных, обязательные элементы)
+
     @Test
     void getOrderByIdResponseBodyTest() {
         OrderApi orderApi = new OrderApi();
@@ -65,10 +66,34 @@ public class GetOrderByIdTest {
 
         orderApi.createOrder(orderDto);
 
-        // Проверяем JSON-схему
         orderApi.getOrderById(40)
                 .then()
                 .statusCode(200)
                 .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schema/CreateOrder.JSON"));
+    }
+
+// Тест №3: Проверяем, что GET запрос по удалённому заказу возвращает ошибку 404
+// Что проверяет тест:
+// 1) Удаляем заказ по указанному id (DELETE /order/{id})
+// 2) Выполняем GET запрос по тому же id
+// 3) Проверяем, что:
+//    - возвращается статус код 404
+//    - поле code в response равно 1
+//    - поле type имеет значение "error"
+//    - поле message равно "Order not found"
+
+    @Test
+    void getOrderByDeletedIdTest() {
+        DeleteOrderApi deleteOrderApi = new DeleteOrderApi();
+
+        deleteOrderApi.deleteOrderById(1);
+
+        OrderApi orderApi = new OrderApi();
+        orderApi.getOrderById(1)
+                .then()
+                .statusCode(404)
+                .body("code", equalTo(1))
+                .body("type", equalTo("error"))
+                .body("message", equalTo("Order not found"));
     }
 }
