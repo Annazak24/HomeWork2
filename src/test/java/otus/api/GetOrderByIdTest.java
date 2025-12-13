@@ -54,7 +54,6 @@ public class GetOrderByIdTest {
     void getOrderByIdResponseBodyTest() {
         OrderApi orderApi = new OrderApi();
 
-        // Создаем заказ
         OrderDTO orderDto = OrderDTO.builder()
                 .id(40)
                 .petId(99)
