@@ -1,7 +1,6 @@
 package otus.api;
 
 import dto.OrderDTO;
-import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 import services.store.OrderApi;
 
