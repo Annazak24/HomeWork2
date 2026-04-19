@@ -1,5 +1,9 @@
 pipeline {
-    agent { label 'built-in' }
+    agent {
+        docker {
+            image 'maven:3.9.4-eclipse-temurin-21'
+        }
+    }
 
     tools {
         allure 'Allure 2.30'
