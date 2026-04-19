@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'maven' }
+    agent { label 'built-in' }
 
     tools {
         allure 'Allure 2.30'
