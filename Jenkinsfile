@@ -21,8 +21,12 @@ pipeline {
                     docker build -t api-tests .
 
                     docker run --rm \
-                      -v "$WORKSPACE/allure-results:/app/allure-results" \
-                      api-tests
+                      --volumes-from jenkins \
+                      -w "$WORKSPACE" \
+                      api-tests \
+                      mvn clean test \
+                        -Dmaven.test.failure.ignore=true \
+                        -Dallure.results.directory=allure-results
                 '''
             }
         }
