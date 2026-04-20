@@ -21,7 +21,7 @@ pipeline {
                     docker build -t api-tests .
 
                     docker run --rm \
-                      -v ${WORKSPACE}/allure-results:/app/allure-results \
+                      -v "$WORKSPACE/allure-results:/app/allure-results" \
                       api-tests
                 '''
             }
