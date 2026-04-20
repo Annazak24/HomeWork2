@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.9.4-eclipse-temurin-21'
-        }
-    }
+    agent any
 
     tools {
         allure 'Allure 2.30'
@@ -16,23 +12,32 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Tests in Docker') {
             steps {
-                sh 'mvn clean test -Dmaven.test.failure.ignore=true'
+                sh '''
+                    rm -rf allure-results
+                    mkdir -p allure-results
+
+                    docker build -t api-tests .
+
+                    docker run --rm \
+                      -v ${WORKSPACE}/allure-results:/app/allure-results \
+                      api-tests
+                '''
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: '**/allure-results/**', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'allure-results/**', allowEmptyArchive: true
 
             allure([
                 includeProperties: false,
                 jdk: '',
                 properties: [],
                 reportBuildPolicy: 'ALWAYS',
-                results: [[path: 'target/allure-results'], [path: 'allure-results']]
+                results: [[path: 'allure-results']]
             ])
         }
     }
