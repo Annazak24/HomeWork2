@@ -85,12 +85,12 @@ public class GetOrderByIdTest {
     void getOrderByDeletedIdTest() {
         DeleteOrderApi deleteOrderApi = new DeleteOrderApi();
 
-        deleteOrderApi.deleteOrderById(188);
+        deleteOrderApi.deleteOrderById(8);
 
         OrderApi orderApi = new OrderApi();
-        orderApi.getOrderById(188)
+        orderApi.getOrderById(8)
                 .then()
-                .statusCode(200)
+                .statusCode(404)
                 .body("code", equalTo(1))
                 .body("type", equalTo("error"))
                 .body("message", equalTo("Order not found"));
