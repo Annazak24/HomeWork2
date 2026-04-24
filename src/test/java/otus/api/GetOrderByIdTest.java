@@ -85,10 +85,10 @@ public class GetOrderByIdTest {
     void getOrderByDeletedIdTest() {
         DeleteOrderApi deleteOrderApi = new DeleteOrderApi();
 
-        deleteOrderApi.deleteOrderById(8);
+        deleteOrderApi.deleteOrderById(30);
 
         OrderApi orderApi = new OrderApi();
-        orderApi.getOrderById(8)
+        orderApi.getOrderById(30)
                 .then()
                 .statusCode(404)
                 .body("code", equalTo(1))
