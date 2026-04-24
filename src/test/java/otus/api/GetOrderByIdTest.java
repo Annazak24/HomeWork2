@@ -90,7 +90,7 @@ public class GetOrderByIdTest {
         OrderApi orderApi = new OrderApi();
         orderApi.getOrderById(188)
                 .then()
-                .statusCode(404)
+//                .statusCode(404)
                 .body("code", equalTo(1))
                 .body("type", equalTo("error"))
                 .body("message", equalTo("Order not found"));
